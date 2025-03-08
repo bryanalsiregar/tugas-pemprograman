@@ -1,5 +1,7 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.ArrayIndexOutOfBoundsException;
+import java.lang.NullPointerException;
 import java.util.Scanner;
 
 class DataKaryawan {
@@ -19,12 +21,18 @@ class DataKaryawan {
 class ArrayDataKaryawanTerurut {
     private DataKaryawan dataKaryawan[];
     private int length;
-    public int max;
-    public int min;
 
     public ArrayDataKaryawanTerurut(int n) {
         this.dataKaryawan = new DataKaryawan[n];
         this.length = 0;
+    }
+
+    public int getTotalGaji() {
+        int totalGaji = 0;
+        for (int i = 0; i < this.length; i++) totalGaji += this.dataKaryawan[i].gaji;
+        System.out.print("Total gaji karyawan adalah "); 
+        System.out.println(totalGaji); 
+        return totalGaji;
     }
 
     public void display() {
@@ -37,6 +45,104 @@ class ArrayDataKaryawanTerurut {
             System.out.println("Gaji: "+dataKaryawan[i].gaji);
             System.out.println("");
         }
+    }
+
+    public void updateMasaKerja(String namaKaryawan, int masaKerja) {
+        int right = this.length-1;
+        int left = 0;
+
+        while (right >= left) {
+            int i = left + (right - left)/2;
+            System.out.println(this.length);
+            if (this.dataKaryawan[i].nama.equalsIgnoreCase(namaKaryawan)) {
+                this.dataKaryawan[i] = new DataKaryawan(
+                    this.dataKaryawan[i].nama,
+                    this.dataKaryawan[i].NIP,
+                    masaKerja,
+                    this.dataKaryawan[i].gaji
+                );
+                return;
+            }
+            if (namaKaryawan.compareToIgnoreCase(this.dataKaryawan[i].nama) > 0) left = i + 1;
+            else if (namaKaryawan.compareToIgnoreCase(this.dataKaryawan[i].nama) < 0) right = i - 1;
+        }
+        System.out.println("Tidak ditemukan "+namaKaryawan+" untuk diupdate!");
+    }
+
+    public void updateGaji(String namaKaryawan, int gaji) {
+        int right = this.length-1;
+        int left = 0;
+
+        while (right >= left) {
+            int i = left + (right - left)/2;
+            System.out.println(this.length);
+            if (this.dataKaryawan[i].nama.equalsIgnoreCase(namaKaryawan)) {
+                this.dataKaryawan[i] = new DataKaryawan(
+                    this.dataKaryawan[i].nama,
+                    this.dataKaryawan[i].NIP,
+                    this.dataKaryawan[i].masaKerja,
+                    gaji
+                );
+                return;
+            }
+            if (namaKaryawan.compareToIgnoreCase(this.dataKaryawan[i].nama) > 0) left = i + 1;
+            else if (namaKaryawan.compareToIgnoreCase(this.dataKaryawan[i].nama) < 0) right = i - 1;
+        }
+        System.out.println("Tidak ditemukan "+namaKaryawan+" untuk diupdate!");
+    }
+
+    public void delete(String namaKaryawan) {
+        int right = this.length-1;
+        int left = 0;
+
+        while (left <= right) {
+            int i = left + (right - left)/2;
+            if (this.dataKaryawan[i].nama.equalsIgnoreCase(namaKaryawan)) {
+                try {
+                    for (int j = i; j < this.length; j++) {
+
+                        this.dataKaryawan[j] = new DataKaryawan(
+                            this.dataKaryawan[j+1].nama,
+                            this.dataKaryawan[j+1].NIP,
+                            this.dataKaryawan[j+1].masaKerja,
+                            this.dataKaryawan[j+1].gaji
+                        );
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    this.dataKaryawan[this.length+1] = null;
+                } catch (NullPointerException e) {
+                    this.dataKaryawan[this.length+1] = null;
+                }
+
+                this.length--;
+                return;
+            }
+
+            if (namaKaryawan.compareToIgnoreCase(this.dataKaryawan[i].nama) > 0) left = i + 1;
+            else if (namaKaryawan.compareToIgnoreCase(this.dataKaryawan[i].nama) < 0) right = i - 1;
+        }
+        System.out.println("Tidak ditemukan "+namaKaryawan+" untuk dihilangkan!");
+    }
+
+    public void find(String namaKaryawan) {
+        int right = this.length-1;
+        int left = 0;
+        
+        while (left <= right) {
+            int i = left + (right - left)/2;
+            if (this.dataKaryawan[i].nama.equalsIgnoreCase(namaKaryawan)) {
+                System.out.println("Terdapat karyawan dengan nama: "+namaKaryawan);
+                System.out.println("Nama: "+this.dataKaryawan[i].nama);
+                System.out.println("NIP: "+this.dataKaryawan[i].NIP);
+                System.out.println("Masa Kerja: "+this.dataKaryawan[i].masaKerja);
+                System.out.println("Gaji: "+this.dataKaryawan[i].gaji);
+                return;
+            }
+
+            if (namaKaryawan.compareToIgnoreCase(this.dataKaryawan[i].nama) > 0) left = i + 1;
+            else if (namaKaryawan.compareToIgnoreCase(this.dataKaryawan[i].nama) < 0) right = i - 1;
+        }
+        System.out.println(namaKaryawan+" Tidak ditemukan!");
     }
 
     public void insert(DataKaryawan karyawan) {
@@ -52,59 +158,54 @@ class ArrayDataKaryawanTerurut {
                 karyawan.masaKerja,
                 karyawan.gaji);
             
-            this.min = karyawan.masaKerja;
-            this.max = karyawan.masaKerja;
             this.length++;
             return;
         }
 
-        int n = this.length/2;
-        int right = this.length-1;
+        int right = this.length-1; 
         int left = 0;
-        int gap = this.length/2;
-        while (true) { 
-            if (n == this.length-1 & karyawan.masaKerja >= this.dataKaryawan[n].masaKerja) {
+        int n = left + (right - left)/2;
+        while (right >= left) { 
+            n = left + (right - left)/2;  
+            if (n == this.length-1 & karyawan.nama.compareToIgnoreCase(this.dataKaryawan[n].nama) >= 0) {
                 this.dataKaryawan[n+1] = new DataKaryawan(karyawan.nama, karyawan.NIP, karyawan.masaKerja, karyawan.gaji);
-                this.max = karyawan.masaKerja;
                 this.length++;
                 return;
             }
-            if (n == 0 & karyawan.masaKerja <= this.dataKaryawan[n].masaKerja) {
-                for (int i = this.length-1; i >= n; i--) {
-                    this.dataKaryawan[i+1] = new DataKaryawan(
-                        this.dataKaryawan[i].nama,
-                        this.dataKaryawan[i].NIP,
-                        this.dataKaryawan[i].masaKerja,
-                        this.dataKaryawan[i].gaji
-                    );
+            try {
+                if (
+                    karyawan.nama.compareToIgnoreCase(this.dataKaryawan[n].nama) <= 0 & 
+                    karyawan.nama.compareToIgnoreCase(this.dataKaryawan[n-1].nama) >= 0) {
+                    
+                    for (int i = this.length-1; i >= n; i--) {
+                        this.dataKaryawan[i+1] = new DataKaryawan(
+                            this.dataKaryawan[i].nama,
+                            this.dataKaryawan[i].NIP,
+                            this.dataKaryawan[i].masaKerja,
+                            this.dataKaryawan[i].gaji
+                        );
+                    }
+                    this.dataKaryawan[n] = new DataKaryawan(karyawan.nama, karyawan.NIP, karyawan.masaKerja, karyawan.gaji);
+                    this.length++;
+                    return;
                 }
-                this.dataKaryawan[n] = new DataKaryawan(karyawan.nama, karyawan.NIP, karyawan.masaKerja, karyawan.gaji);
-                this.min = karyawan.masaKerja;
-                this.length++;
-                return;
-            }
-            if (karyawan.masaKerja <= this.dataKaryawan[n].masaKerja & karyawan.masaKerja >= this.dataKaryawan[n-1].masaKerja) {
-                for (int i = this.length-1; i >= n; i--) {
-                    this.dataKaryawan[i+1] = new DataKaryawan(
-                        this.dataKaryawan[i].nama,
-                        this.dataKaryawan[i].NIP,
-                        this.dataKaryawan[i].masaKerja,
-                        this.dataKaryawan[i].gaji
-                    );
+            } catch (IndexOutOfBoundsException e) {
+                if (n == 0 & karyawan.nama.compareToIgnoreCase(this.dataKaryawan[n].nama) <= 0) {
+                    for (int i = this.length-1; i >= n; i--) {
+                        this.dataKaryawan[i+1] = new DataKaryawan(
+                            this.dataKaryawan[i].nama,
+                            this.dataKaryawan[i].NIP,
+                            this.dataKaryawan[i].masaKerja,
+                            this.dataKaryawan[i].gaji
+                        );
+                    }
+                    this.dataKaryawan[n] = new DataKaryawan(karyawan.nama, karyawan.NIP, karyawan.masaKerja, karyawan.gaji);
+                    this.length++;
+                    return;
                 }
-                this.dataKaryawan[n] = new DataKaryawan(karyawan.nama, karyawan.NIP, karyawan.masaKerja, karyawan.gaji);
-                this.length++;
-                return;
             }
-            if (karyawan.masaKerja > dataKaryawan[n].masaKerja) {
-                left = n;
-                n = right - (gap/2);
-                gap = (right - left)/2;
-            } else if (karyawan.masaKerja < dataKaryawan[n].masaKerja) {
-                right = n;
-                n = left + (gap/2); 
-                gap = (right - left)/2;
-            }
+            if (karyawan.nama.compareToIgnoreCase(this.dataKaryawan[n].nama) > 0) left = n + 1;
+            else if (karyawan.nama.compareToIgnoreCase(this.dataKaryawan[n].nama) < 0) right = n-1;
         }
     }
 
@@ -145,7 +246,48 @@ class Main {
         } catch (FileNotFoundException e) {
             System.out.println("file.txt is not found!");
         }
-
+        
+        System.out.println("Array terurut yang tersedia dari file.txt");
         arrayKaryawan.display();
+        System.out.println("-----------------------------------------");
+        System.out.println("Mencari Prabowo Subianto");
+        arrayKaryawan.find("Prabowo Subianto");
+        System.out.println("Mencari Tono Prabowo");
+        arrayKaryawan.find("Tono Prabowo");
+        System.out.println("Mencari Joko Widodo");
+        arrayKaryawan.find("Joko Widodo");
+        System.out.println("Mencari Agus Rahman");
+        arrayKaryawan.find("Agus Rahman");
+        System.out.println("Mencari Nia Dewi");
+        arrayKaryawan.find("Nia Dewi");
+        System.out.println("-----------------------------------------");
+        System.out.println("Menghapus Bryan Al Hilal Siregar");
+        arrayKaryawan.delete("Bryan Al Hilal Siregar");
+        System.out.println("Menghapus Tono Prabowo");
+        arrayKaryawan.delete("Tono Prabowo");
+        System.out.println("Menghapus Joko Widodo");
+        arrayKaryawan.delete("Joko Widodo");
+        System.out.println("Menghapus Agus Rahman");
+        arrayKaryawan.delete("Agus Rahman");
+        arrayKaryawan.display();
+        System.out.println("-----------------------------------------");
+        System.out.println("Update Gaji Siti Aisyah menjadi 1000000");
+        arrayKaryawan.updateGaji("Siti Aisyah", 1000000);
+        System.out.println("Update Gaji Tim Cook menjadi 100000000");
+        arrayKaryawan.updateGaji("Tim Cook", 100000000);
+        System.out.println("Update Gaji Lita Sari menjadi 300000");
+        arrayKaryawan.updateGaji("Lita Sari", 300000);
+        arrayKaryawan.display();
+        System.out.println("-----------------------------------------");
+        System.out.println("Update Masa Kerja Siti Aisyah menjadi 1");
+        arrayKaryawan.updateMasaKerja("Siti Aisyah", 1);
+        System.out.println("Update Masa Kerja Elon Musk menjadi 10000");
+        arrayKaryawan.updateMasaKerja("Elon Musk", 10000);
+        System.out.println("Update Masa Kerja Lita Sari menjadi 300000");
+        arrayKaryawan.updateMasaKerja("Lita Sari", 100);
+        arrayKaryawan.display();
+        System.out.println("-----------------------------------------");
+        System.out.println("Menampilkan total gaji karyawan");
+        arrayKaryawan.getTotalGaji();
     }
 }
