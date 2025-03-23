@@ -82,7 +82,15 @@ class PriorityQueuePesawatTerbang {
 
         int stop = this.length;
         for (int i = 0; i < stop; i++) {
+            System.out.print("(");
             System.out.print(this.peek().nilaiPrioritas);
+            System.out.print(", ");
+            System.out.print(this.peek().namaMaskapai);
+            System.out.print(", ");
+            System.out.print(this.peek().noPenerbangan);
+            System.out.print(", ");
+            System.out.print(this.peek().kotaTujuan);
+            System.out.print(")");
             System.out.print(" ");
             this.dequeue();
         }
@@ -222,9 +230,7 @@ class Main {
 
         System.out.println("Filling priority queue");
         bandara.display();
-        System.out.println("Remove 6 elements queue");
-        bandara.dequeue();
-        bandara.dequeue();
+        System.out.println("Remove 4 elements queue");
         bandara.dequeue();
         bandara.dequeue();
         bandara.dequeue();
