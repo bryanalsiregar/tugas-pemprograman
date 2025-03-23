@@ -1,0 +1,20 @@
+Garuda Indonesia,GA123,Jakarta,85
+Lion Air,JT456,Bali,75
+AirAsia,AK789,Kuala Lumpur,90
+Sriwijaya Air,SJ234,Medan,70
+Batik Air,ID567,Surabaya,80
+Citilink,QG890,Yogyakarta,88
+Indonesia AirAsia,QZ123,Bandung,65
+Wings Air,IW345,Makassar,60
+Super Air Jet,IU456,Denpasar,72
+Garuda Indonesia,GA987,Semarang,95
+Lion Air,JT543,Palembang,78
+Sriwijaya Air,SJ876,Balikpapan,62
+Batik Air,ID678,Manado,85
+Citilink,QG234,Solo,77
+AirAsia,AK234,Penang,82
+Indonesia AirAsia,QZ567,Lombok,74
+Wings Air,IW890,Pontianak,68
+Super Air Jet,IU123,Makassar,80
+Garuda Indonesia,GA345,Surabaya,88
+Lion Air,JT678,Medan,70
